@@ -1,0 +1,1 @@
+# plurit-static-page
