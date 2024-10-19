@@ -3,58 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Plurit - Community-driven platform">
-  <meta name="author" content="Plurit">
-  <meta property="og:title" content="Plurit">
-  <meta property="og:description" content="Discover events, connect with communities.">
-  <meta property="og:url" content="https://www.plurit.app">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://www.plurit.app/logo.png">
+  <title>Plurit - People + Events</title>
 
-  <title>Plurit - Welcome</title>
-  
-  <!-- Link to external CSS -->
+  <!-- Link to External CSS -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- Add any external fonts you like -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <h1 class="logo"><a href="#">Plurit</a></h1>
-      <nav class="site-nav">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Events</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </nav>
+
+  <!-- Navigation Bar -->
+  <header>
+    <div class="nav-container">
+      <div class="brand-title">PLURIT</div>
+    </div>
+    <!-- Navigation Buttons on the Right Side -->
+    <div class="nav-buttons">
+      <a href="#about-section" class="nav-button">
+        <span>About</span>
+      </a>
+      <a href="mailto:hr@plurit.app" class="nav-button">
+        <span>Contact</span>
+      </a>
+      <a href="#" class="nav-button">
+        <span>FAQ: Coming Soon</span>
+      </a>
     </div>
   </header>
 
-  <section class="hero">
-    <div class="container">
-      <h2>Welcome to Plurit</h2>
-      <p>Your platform to connect with communities, discover events, and more.</p>
-      <a href="#" class="btn">Get Started</a>
+  <!-- Section 1: Hero Section -->
+  <section class="hero" style="background-image: url('images/1.jpg');">
+    <!-- Move the quote to bottom-left -->
+    <div class="quote bottom-left-quote">
+      <p>“Love Lives Here—Plurit”</p>
+    </div>
+    <div class="content-wrapper">
+      <h1>People + Events = Plurit!</h1>
+      <p class="sub-text">Join Us To Celebrate The Life</p>
     </div>
   </section>
 
-  <section class="about">
-    <div class="container">
-      <h3>About Plurit</h3>
-      <p>Plurit is a platform where you can explore events, connect with people, and grow your community. Whether you are looking for a social gathering or professional networking, Plurit has something for everyone.</p>
+  <!-- Section 2: Find Your Tribe -->
+  <section id="about-section" class="tribe-section" style="background-image: url('images/5.jpg');">
+    <div class="left-content">
+      <h1>Find Your Tribe.<br> Embrace the PLUR!</h1>
+    </div>
+    <div class="right-content">
+      <p><strong>Plur It</strong> connects people through shared experiences rooted in <strong>Peace, Love, Unity, and Respect</strong>. Meet new people, find and create groups and events, and much more—all around the events you go to. Our ultimate goal is to empower everyone to form deep connections with new people and communities—whenever and wherever they want.</p>
     </div>
   </section>
 
-  <footer class="site-footer">
-    <div class="container">
+  <!-- Section 3: Make Plans w/ Friends -->
+  <section class="plans-section" style="background-image: url('images/4.jpg');">
+    <div class="content-wrapper">
+      <h1>Make Plans w/ Friends and Meet New People</h1>
+      <p>Hosting a pre-game? Poker night? Looking for an afterparty? Want to expand your party crew? Join a community of partygoers and find what you’re looking for!</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
       <p>© 2024 Plurit. All rights reserved.</p>
     </div>
   </footer>
 
+  <!-- Include JS for smooth animations -->
+  <script src="script.js"></script>
 </body>
 </html>
