@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="careers.html" class="active">Careers</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Join Our Team</h1>
+        <form id="careers-form" action="https://script.google.com/macros/s/your-script-id/exec" method="POST" enctype="multipart/form-data">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" pattern="\d{10}" required>
+
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="company">Current Company</label>
+            <input type="text" id="company" name="company" required>
+
+            <label for="resume">Resume (PDF)</label>
+            <input type="file" id="resume" name="resume" accept=".pdf" required>
+
+            <label for="current-comp">Current Compensation</label>
+            <input type="number" id="current-comp" name="current-comp" min="0" required>
+
+            <label for="expected-comp">Expected Compensation</label>
+            <input type="number" id="expected-comp" name="expected-comp" min="0" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Plurit. All rights reserved.</p>
+    </footer>
+</body>
+</html>
