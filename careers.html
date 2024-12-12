@@ -18,32 +18,32 @@
     </header>
     <main>
         <h1>Join Our Team</h1>
-        <form id="careers-form" action="https://script.google.com/macros/s/your-script-id/exec" method="POST" enctype="multipart/form-data">
+        <form id="careers-form" action="https://script.google.com/macros/s/AKfycbx9ZRwlqGXG26TienWedY8f5TJzILtwTSHHpo0lkfF0e-cy-wXY6BGZ0EkOhDCpV0g/exec" method="POST" enctype="multipart/form-data">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="text" id="name" name="name" required>
 
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="email" id="email" name="email" required>
 
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" pattern="\d{10}" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="tel" id="phone" name="phone" pattern="\d{10}" required>
 
             <label for="location">Location</label>
-            <input type="text" id="location" name="location" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="text" id="location" name="location" required>
 
             <label for="company">Current Company</label>
-            <input type="text" id="company" name="company" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="text" id="company" name="company" required>
 
             <label for="resume">Resume (PDF)</label>
-            <input type="file" id="resume" name="resume" accept=".pdf" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="file" id="resume" name="resume" accept=".pdf" required>
 
             <label for="current-comp">Current Compensation</label>
-            <input type="number" id="current-comp" name="current-comp" min="0" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="number" id="current-comp" name="current-comp" min="0" required>
 
             <label for="expected-comp">Expected Compensation</label>
-            <input type="number" id="expected-comp" name="expected-comp" min="0" required>
+            <input style="margin-bottom: 15px; padding: 10px; width: 300px;" type="number" id="expected-comp" name="expected-comp" min="0" required>
 
-            <button type="submit">Submit</button>
+            <button style="padding: 10px 20px; margin-top: 15px;" type="submit">Submit</button>
         </form>
     </main>
     <footer>
@@ -51,3 +51,14 @@
     </footer>
 </body>
 </html>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx9ZRwlqGXG26TienWedY8f5TJzILtwTSHHpo0lkfF0e-cy-wXY6BGZ0EkOhDCpV0g/exec';
+    const form = document.querySelector('form');
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+        .then(response => alert('Form submitted successfully!'))
+        .catch(error => alert('Error! ' + error.message));
+    });
+</script>
