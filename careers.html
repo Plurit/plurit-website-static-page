@@ -7,7 +7,7 @@
   <link href="styles.css" rel="stylesheet"/>
   <style>
     body {
-      background: url('images/1.jpg') no-repeat center center fixed;
+      background: url('1.jpg') no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -15,8 +15,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       height: 100vh;
+      padding-top: 80px; /* Move content down */
     }
 
     form {
@@ -25,9 +26,9 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: none;
+      background: rgba(0, 0, 0, 0.7); /* Add a slight background for visibility */
       border-radius: 10px;
-      box-shadow: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     }
 
     label {
@@ -37,14 +38,15 @@
 
     input, button {
       width: 80%;
-      padding: 8px;
+      padding: 10px;
       margin: 5px 0 10px;
-      border: none;
+      border: 1px solid #F4A261; /* Highlight inputs */
       border-radius: 5px;
     }
 
     input {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
     }
 
     button {
