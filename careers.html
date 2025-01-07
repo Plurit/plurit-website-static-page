@@ -73,6 +73,24 @@
       margin-top: 20px;
     }
   </style>
+<script>
+function encodeFile() {
+  const fileInput = document.getElementById('resume');
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Encode file data in Base64
+      document.getElementById('resumeData').value = e.target.result.split(',')[1];
+      document.getElementById('resumeName').value = file.name;
+      document.getElementById('resumeType').value = file.type;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+  
 </head>
 <body>
 <main>
@@ -94,7 +112,11 @@
     <input id="company" name="company" required type="text"/>
 
     <label for="resume">Resume (PDF)</label>
-    <input accept=".pdf" id="resume" name="resume" required type="file"/>
+<input id="resume" name="resume" required type="file" accept=".pdf" onchange="encodeFile()"/>
+<input id="resumeData" name="resumeData" type="hidden"/>
+<input id="resumeName" name="resumeName" type="hidden"/>
+<input id="resumeType" name="resumeType" type="hidden"/>
+
 
     <label for="current-comp">Current Compensation</label>
     <input id="current-comp" min="0" name="current-comp" required type="number"/>
