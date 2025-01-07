@@ -1,0 +1,329 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: #FFFFFF;
+  overflow-x: hidden;
+  background-color: #1B1B1B; /* Dark background for contrast */
+}
+
+/* Navigation Bar */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 30px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+header.scrolled {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.brand-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+}
+
+/* Navigation Buttons on the Right Side */
+.nav-buttons {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-button {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: 5px 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #FFFFFF;
+  text-decoration: none;
+  text-align: center;
+  line-height: 50px;
+  overflow: hidden;
+  transition: width 0.3s;
+}
+
+.nav-button:hover {
+  width: 180px;
+}
+
+.nav-button span {
+  position: absolute;
+  left: 60px;
+  top: 0;
+  height: 100%;
+  line-height: 50px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-button:hover span {
+  opacity: 1;
+}
+
+/* Position the quote at the bottom-left */
+.bottom-left-quote {
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  z-index: 2;
+  color: #F4A261; /* Adjusted color */
+  font-size: 1.3rem; /* Adjusted font size */
+  font-weight: 500; /* Reduced font weight */
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+/* Hero, Tribe, and Plans Sections */
+.hero,
+.tribe-section,
+.plans-section {
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center;     /* Center the content vertically */
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after,
+.tribe-section::after,
+.plans-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(27, 27, 27, 0.7),
+    rgba(27, 27, 27, 0.3)
+  );
+  z-index: 1;
+}
+
+.content-wrapper {
+  text-align: center;
+  max-width: 80%;
+  width: 100%; /* Ensure full width within the max-width */
+  margin: 0 auto; /* Center the wrapper */
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 20px;
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+}
+
+.content-wrapper.visible {
+  opacity: 1;
+}
+
+/* Hero Section */
+.hero h1 {
+  font-size: 3rem; /* Reduced from 4rem */
+  font-weight: 700; /* Reduced from 800 */
+  color: #FFFFFF;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.sub-text {
+  font-size: 1.2rem; /* Reduced from 1.5rem */
+  margin-top: 10px;
+  color: #F4A261;
+}
+
+/* Tribe Section */
+.tribe-section {
+  padding: 50px 0;
+}
+
+.tribe-section .content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the flex items horizontally */
+  align-items: flex-start; /* Align items to the top */
+  text-align: left;
+}
+
+.tribe-section .left-content,
+.tribe-section .right-content {
+  width: 45%;
+  color: #ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.tribe-section .left-content {
+  border-right: 4px solid #B5651D;
+}
+
+.tribe-section .left-content h1 {
+  font-size: 2.5rem; /* Reduced from 3.5rem */
+  font-weight: 700; /* Reduced from 800 */
+  color: #B5651D;
+}
+
+.tribe-section .right-content p {
+  font-size: 1.1rem; /* Reduced font size */
+  line-height: 1.8;
+}
+
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: table;
+}
+
+/* Plans Section */
+.plans-section .content-wrapper {
+  max-width: 800px;
+  width: 100%; /* Ensure full width within the max-width */
+  margin: 0 auto; /* Center the wrapper */
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 20px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.plans-section .content-wrapper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.plans-section h1 {
+  font-size: 2.5rem; /* Reduced from 3.5rem */
+  font-weight: 700; /* Reduced from 800 */
+  color: #D2691E;
+}
+
+.plans-section p {
+  font-size: 1.1rem; /* Reduced font size */
+  margin-top: 15px;
+}
+
+/* Footer */
+footer {
+  background-color: #000;
+  color: #FFFFFF;
+  padding: 20px;
+  text-align: center;
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+footer a {
+  color: #FFD700;
+  text-decoration: underline;
+}
+
+/* Keyframes for Animations */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Parallax Effect */
+.hero,
+.tribe-section,
+.plans-section {
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .brand-title {
+    font-size: 1.8rem;
+  }
+
+  /* Hide navigation buttons on small screens or adjust as needed */
+  .nav-buttons {
+    display: none;
+  }
+
+  /* Adjust heading font sizes for smaller screens */
+  .hero h1,
+  .tribe-section .left-content h1,
+  .plans-section h1 {
+    font-size: 2rem; /* Reduced size */
+  }
+
+  .sub-text {
+    font-size: 1rem; /* Reduced size */
+  }
+
+  .plans-section p,
+  .tribe-section .right-content p {
+    font-size: 0.9rem; /* Adjusted paragraph font size */
+  }
+
+  /* Adjust the content wrapper in the tribe section */
+  .tribe-section .content-wrapper {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px; /* Reduce padding */
+  }
+
+  .tribe-section .left-content,
+  .tribe-section .right-content {
+    width: 100%;
+    padding: 10px;
+    border: none;
+  }
+
+  .tribe-section .left-content {
+    margin-bottom: 20px;
+  }
+
+  /* Reduce the font size of the heading in the tribe section */
+  .tribe-section .left-content h1 {
+    font-size: 2rem; /* Reduced size */
+    word-break: break-word; /* Allow long words to break */
+    line-height: 1.2; /* Adjust line height for better spacing */
+  }
+
+  .tribe-section .right-content p {
+    font-size: 0.9rem; /* Adjusted paragraph font size */
+  }
+}
+
+/* Smooth Scrolling for Internal Links */
+html {
+  scroll-behavior: smooth;
+}
