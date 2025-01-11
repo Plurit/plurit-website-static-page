@@ -17,7 +17,7 @@
       align-items: center;
       justify-content: flex-start;
       height: 100vh;
-      padding-top: 80px; /* Move content down */
+      padding-top: 80px;
     }
 
     h1 {
@@ -34,7 +34,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(0, 0, 0, 0.7); /* Add a slight background for visibility */
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     }
@@ -48,7 +48,7 @@
       width: 80%;
       padding: 10px;
       margin: 5px 0 10px;
-      border: 1px solid #F4A261; /* Highlight inputs */
+      border: 1px solid #F4A261;
       border-radius: 5px;
     }
 
@@ -73,7 +73,6 @@
       margin-top: 20px;
     }
 
-    /* Loading spinner */
     .loading-spinner {
       display: none;
       border: 4px solid rgba(255, 255, 255, 0.2);
@@ -94,12 +93,11 @@
       }
     }
 
-    /* Success Message */
     .success-message {
       display: none;
       margin-top: 20px;
       font-size: 1.2rem;
-      color: #28a745; /* Green color */
+      color: #28a745;
       font-weight: bold;
     }
   </style>
@@ -111,7 +109,6 @@ function encodeFile() {
   if (file) {
     const reader = new FileReader();
     reader.onload = function(e) {
-      // Encode file data in Base64
       document.getElementById('resumeData').value = e.target.result.split(',')[1];
       document.getElementById('resumeName').value = file.name;
       document.getElementById('resumeType').value = file.type;
@@ -121,17 +118,15 @@ function encodeFile() {
 }
 
 function handleFormSubmit(event) {
-  event.preventDefault(); // Prevent default form submission
+  event.preventDefault();
   const submitButton = document.querySelector('button[type="submit"]');
   const spinner = document.querySelector('.loading-spinner');
   const successMessage = document.querySelector('.success-message');
   const form = document.getElementById('careers-form');
 
-  // Disable the submit button and show the spinner
   submitButton.disabled = true;
   spinner.style.display = 'block';
 
-  // Submit the form data
   const formData = new FormData(form);
 
   fetch(form.action, {
@@ -194,8 +189,4 @@ function handleFormSubmit(event) {
     <div class="success-message"></div>
   </form>
 </main>
-<footer>
-  <p style="color: #ffffff; margin-top: 150px;">&#169; 2024 Plurit. All rights reserved.</p>
-</footer>
-</body>
-</html>
+<footer
