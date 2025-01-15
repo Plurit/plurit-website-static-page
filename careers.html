@@ -65,12 +65,10 @@
       transition: background 0.3s;
     }
 
-    button:hover {
-      background: #D2691E;
-    }
-
-    footer {
-      margin-top: 20px;
+    button:disabled {
+      background: #ccc; /* Greyed-out look */
+      color: #666;
+      cursor: not-allowed;
     }
 
     .loading-spinner {
@@ -100,6 +98,12 @@
       color: #28a745;
       font-weight: bold;
     }
+
+    .submit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   </style>
 <script>
 function encodeFile() {
@@ -125,20 +129,16 @@ function handleFormSubmit(event) {
   const successMessage = document.querySelector('.success-message');
   const form = document.getElementById('careers-form');
 
+  // Disable and hide the submit button, show spinner and message
   submitButton.disabled = true;
+  submitButton.style.display = 'none';
   spinner.style.display = 'block';
-
-  // Debugging: Log form action URL
-  console.log("Submitting form to: ", form.action);
+  successMessage.textContent = "Form submitting...";
+  successMessage.style.display = 'block';
 
   // Submit the form programmatically
   form.submit();
-
-  // Optional UI feedback (may not show if browser redirects)
-  successMessage.textContent = "Submitting form...";
-  successMessage.style.display = 'block';
 }
-
 </script>
 </head>
 <body>
@@ -172,9 +172,12 @@ function handleFormSubmit(event) {
     <label for="expected-comp">Expected Compensation</label>
     <input id="expected-comp" min="0" name="expected-comp" required type="number"/>
 
-    <button type="submit">Submit</button>
-    <div class="loading-spinner"></div>
-    <div class="success-message"></div>
+    <div class="submit-container">
+      <button type="submit">Submit</button>
+      <div class="loading-spinner"></div>
+      <div class="success-message"></div>
+    </div>
   </form>
 </main>
-<footer
+</body>
+</html>
