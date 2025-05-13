@@ -6,7 +6,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path="event" element={<EventDetailPage />}>
+      <Route path="events" element={<EventDetailPage />}>
         <Route path=":eventId" element={<EventDetailPage />} />
       </Route>
     </Routes>
