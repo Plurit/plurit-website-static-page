@@ -21,9 +21,13 @@ export class EventDetail {
   eventType?: string;
   eventFeatures: EventFeatures;
   joinChatDetails?: JoinChatDetails;
-  attendeesCount: number = 1;
+  attendeesCount: number = 0;
+  likesCount: number = 0;
   createTimestamp?: string;
   updateTimestamp?: string;
+
+  policyAndConditions?: string = "N/A";
+  frequentlyAskedQuestions?: FAQ[] = [];
 
   private languageNames = new Intl.DisplayNames(["en"], {
     type: "language",
@@ -77,8 +81,17 @@ export class EventFeatures {
 
 export class JoinChatDetails {
   isEnabled?: boolean;
+  chatLink?: string = "";
 
   constructor(data: JoinChatDetails) {
+    Object.assign(this, data);
+  }
+}
+
+export class FAQ {
+  question?: string;
+  answer?: string;
+  constructor(data: FAQ) {
     Object.assign(this, data);
   }
 }

@@ -15,10 +15,10 @@ export function formatDate(dateStr: string): string {
   const day = date.getDate();
   const suffix = getOrdinalSuffix(day);
 
-  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
-  const month = date.toLocaleDateString("en-US", { month: "short" });
+  const weekday = date.toLocaleDateString(undefined, { weekday: "long" });
+  const month = date.toLocaleDateString(undefined, { month: "short" });
   const year = date.getFullYear().toString().slice(-2);
-  const time = date.toLocaleTimeString("en-US", {
+  const time = date.toLocaleTimeString(undefined, {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,

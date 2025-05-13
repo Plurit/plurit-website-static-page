@@ -14,10 +14,16 @@ import {
   Anchor,
   Divider,
   Box,
-  SimpleGrid,
   AspectRatio,
   Avatar,
   ScrollArea,
+  Grid,
+  ActionIcon,
+  Badge,
+  Accordion,
+  Modal,
+  CopyButton,
+  TextInput,
 } from "@mantine/core";
 import {
   MdCalendarToday,
@@ -30,36 +36,82 @@ import {
   MdHourglassTop,
   MdOutlinePerson,
   MdOutlineLocationOn,
-  MdCurrencyRupee,
-  MdConfirmationNumber,
+  MdFavorite,
+  MdFavoriteBorder,
+  MdBookOnline,
+  MdOutlineQuestionMark,
+  MdArrowForwardIos,
+  MdComment,
+  MdIosShare,
 } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { TbCoinRupee, TbInfoTriangle } from "react-icons/tb";
+
 import { useParams } from "react-router";
 
-import { Env } from "../../constants";
-import { EventDetail } from "../../workflow/events";
-import { useState } from "react";
+import { useEventDetail, useLikeEvent } from "src/workflow/events";
+import { useCallback, useEffect, useState } from "react";
+
 import classes from "./detail.module.css";
 
 const GROUP_GAP = 6;
 
-export default function EventDetailPage() {
+function EventDetailPage() {
   const { eventId } = useParams();
 
   const [isTextEnlarged, setIsTextEnlarged] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
-  const { data, isLoading } = useQuery<EventDetail>({
-    queryKey: ["eventDetail"],
-    queryFn: async () => {
-      const res = await axios({
-        baseURL: Env.VITE_API_BASE_URL,
-        url: `/event/${eventId}`,
-        method: "GET",
-      });
-      return new EventDetail(res.data);
-    },
-  });
+  const { data, isLoading } = useEventDetail(eventId!);
+  const { mutate: updateLike } = useLikeEvent();
+
+  const [likesCount, setLikesCount] = useState(0);
+
+  const onLikeClick = useCallback(() => {
+    const likeCountKey = `likeCount_${eventId}`;
+    const likeCount = parseInt(localStorage.getItem(likeCountKey) || "0");
+
+    if (likeCount >= 2) {
+      // Do nothing if the user has already liked the event twice
+      return;
+    }
+
+    let isNextLike = false;
+
+    setLiked((prev) => {
+      isNextLike = !prev;
+      return !prev;
+    });
+
+    if (!isNextLike) {
+      localStorage.setItem(likeCountKey, (likeCount + 1).toString());
+    }
+    updateLike({
+      eventId: eventId!,
+      liked: !isNextLike,
+    });
+    setLikesCount((prevLikesCount) => {
+      if (isNextLike) {
+        return prevLikesCount + 1;
+      } else {
+        return prevLikesCount - 1;
+      }
+    });
+  }, [eventId, updateLike]);
+
+  const onShareClick = useCallback(() => {
+    setShowShareModal(true);
+  }, []);
+
+  useEffect(() => {
+    const likeCountKey = `likeCount_${eventId}`;
+    const likeCount = parseInt(localStorage.getItem(likeCountKey) || "0");
+    setLiked(likeCount > 0);
+  }, [eventId]);
+
+  useEffect(() => {
+    setLikesCount(data?.likesCount || 0);
+  }, [data?.likesCount]);
 
   if (isLoading)
     return (
@@ -88,7 +140,13 @@ export default function EventDetailPage() {
     );
 
   return (
-    <Container size="lg" p="lg" bg={"black"}>
+    <Container
+      size="lg"
+      p="lg"
+      bg={"dark.8"}
+      w={"100vw"}
+      style={{ maxWidth: "100vw", overflowX: "hidden" }}
+    >
       <title>{data.eventName}</title>
       <div style={{ position: "relative" }}>
         <Carousel withIndicators loop classNames={classes}>
@@ -106,6 +164,52 @@ export default function EventDetailPage() {
             </Carousel.Slide>
           ))}
         </Carousel>
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+          }}
+        >
+          <ActionIcon
+            variant="filled"
+            radius="xl"
+            size="lg"
+            onClick={onShareClick}
+            bg={"dark.4"}
+          >
+            <MdIosShare size={22} />
+          </ActionIcon>
+
+          <Badge
+            style={{
+              position: "absolute",
+              top: 2,
+              right: 2,
+              zIndex: 10,
+              transform: "translate(50%, -50%)",
+            }}
+            size="sm"
+            circle
+          >
+            {likesCount}
+          </Badge>
+
+          <ActionIcon
+            variant="filled"
+            radius="xl"
+            size="lg"
+            ml={"md"}
+            onClick={onLikeClick}
+            bg={"dark.4"}
+            style={{
+              color: liked ? "red" : "white",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {liked ? <MdFavorite size={22} /> : <MdFavoriteBorder size={22} />}
+          </ActionIcon>
+        </div>
       </div>
 
       <Title order={2} mt={"xs"}>
@@ -157,10 +261,11 @@ export default function EventDetailPage() {
             variant="subtle"
             color="white"
             style={{
+              fontWeight: 500,
               textDecoration: "underline",
               textDecorationStyle: "dashed",
-              textUnderlineOffset: "5px",
-              textDecorationThickness: "2px",
+              textUnderlineOffset: "4px",
+              textDecorationThickness: "1.5px",
             }}
             p={0}
             m={0}
@@ -205,7 +310,6 @@ export default function EventDetailPage() {
             gap={{ base: 0, sm: "sm" }}
           >
             <Group gap={2} align="center">
-              {/* TODO: add currency icon */}
               <div
                 style={{
                   borderRadius: "60px",
@@ -219,10 +323,10 @@ export default function EventDetailPage() {
                   position: "relative",
                 }}
               >
-                <MdCurrencyRupee size={18} />
+                <TbCoinRupee size={20} />
               </div>
               <Text size="sm" fw={500}>
-                starts at ₹ {data.ticketAmount}
+                starts at ₹{data.ticketAmount}
               </Text>
             </Group>
 
@@ -232,7 +336,7 @@ export default function EventDetailPage() {
               variant="white"
               component="a"
               href={data.ticketLink}
-              leftSection={<MdConfirmationNumber size={16} />}
+              leftSection={<MdBookOnline size={16} />}
               target="_blank"
             >
               Get tickets
@@ -240,28 +344,66 @@ export default function EventDetailPage() {
           </Flex>
         </Paper>
 
-        <Group mt="xs" gap={GROUP_GAP} align="center">
-          <SimpleGrid
-            cols={{
-              base: 2,
-              sm: 3,
-            }}
-          >
+        <Grid mt={"md"}>
+          <Grid.Col span={{ base: 6, sm: 3 }}>
             <Group gap={GROUP_GAP} title="Ideal for">
               <MdOutlinePerson size={20} />
               <Text>ideal for {data?.eventFeatures.minimumAge}+ years</Text>
             </Group>
-            <Group gap={GROUP_GAP} title="Event Duration">
+          </Grid.Col>
+          <Grid.Col span={{ base: 6, sm: 2 }}>
+            <Group gap={GROUP_GAP} maw={80} title="Event Duration">
               <MdHourglassTop size={20} />
               <Text>{data?.eventDurationDisplay}</Text>
             </Group>
+          </Grid.Col>
+          <Grid.Col span={{ base: 6, sm: 3 }}>
             <Group gap={GROUP_GAP} title="Supported Languages">
               <MdLanguage size={20} />
               <Text>{data?.supportedLanguages.join(", ")}</Text>
             </Group>
-          </SimpleGrid>
-        </Group>
+          </Grid.Col>
+        </Grid>
       </Box>
+
+      {/* <Paper shadow="md" radius="lg" p="xs" mt="md" withBorder bg="#2D2C2C"> */}
+      <Accordion
+        variant="contained"
+        mt={"md"}
+        classNames={classes}
+        chevron={<MdArrowForwardIos size={32} />}
+      >
+        <Accordion.Item value="event-policy">
+          <Accordion.Control icon={<TbInfoTriangle />}>
+            <Text fw={"bold"}>Venue Policy & Conditions</Text>
+          </Accordion.Control>
+          <Accordion.Panel>{data.policyAndConditions}</Accordion.Panel>
+        </Accordion.Item>
+        <Divider ml={"sm"} mr={"sm"} />
+        <Accordion.Item value="print">
+          <Accordion.Control icon={<MdOutlineQuestionMark />}>
+            <Text fw={"bold"}>Frequently Asked Questions</Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            {data.frequentlyAskedQuestions?.length === 0 ? (
+              <Text>N/A</Text>
+            ) : null}
+            {data.frequentlyAskedQuestions?.map((question) => (
+              <div key={question.question} style={{ marginBottom: "10px" }}>
+                <Group gap={GROUP_GAP} mb={4}>
+                  <MdOutlineQuestionMark size={16} />
+                  <Text size="sm">{question.question}</Text>
+                </Group>
+                <Group gap={GROUP_GAP}>
+                  <MdComment size={14} />
+                  <Text size="sm">{question.answer}</Text>
+                </Group>
+              </div>
+            ))}
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+      {/* </Paper> */}
 
       {data?.galleryImages.length > 0 && (
         <>
@@ -291,7 +433,57 @@ export default function EventDetailPage() {
         </>
       )}
 
+      {data.joinChatDetails?.isEnabled ? (
+        <Button
+          variant="white"
+          color="white"
+          radius={"xl"}
+          pl={"xl"}
+          pr={"xl"}
+          leftSection={<MdComment fill="dark" />}
+          onClick={() => {
+            window.open(data.joinChatDetails?.chatLink);
+          }}
+          style={{
+            position: "fixed",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+          }}
+        >
+          <Text c={"dark"}>Join Chat</Text>
+        </Button>
+      ) : null}
+
       <Space h="xl" />
+
+      <Modal
+        opened={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        title="Share event"
+        centered
+      >
+        <Paper radius={"md"} p={"sm"} bg={"dark.5"}>
+          <CopyButton value={window.location.href}>
+            {({ copied, copy }) => (
+              <TextInput
+                value={window.location.href}
+                readOnly
+                radius="md"
+                rightSectionWidth={80}
+                rightSection={
+                  <Button color="blue" radius="xl" size="xs" onClick={copy}>
+                    {copied ? "Copied" : "Copy"}
+                  </Button>
+                }
+              />
+            )}
+          </CopyButton>
+        </Paper>
+      </Modal>
     </Container>
   );
 }
+
+export default EventDetailPage;
