@@ -1,3 +1,4 @@
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Carousel } from "@mantine/carousel";
 import {
   Button,
@@ -24,6 +25,8 @@ import {
   Modal,
   CopyButton,
   TextInput,
+  List,
+  Tooltip,
 } from "@mantine/core";
 import {
   MdCalendarToday,
@@ -39,21 +42,25 @@ import {
   MdFavorite,
   MdFavoriteBorder,
   MdBookOnline,
-  MdOutlineQuestionMark,
   MdArrowForwardIos,
   MdComment,
   MdIosShare,
+  MdOutlineHelpOutline,
+  MdOutlinePets,
+  MdOutlinePool,
+  MdOutlineQrCode,
+  MdFamilyRestroom,
+  MdLiquor,
 } from "react-icons/md";
 import { TbCoinRupee, TbInfoTriangle } from "react-icons/tb";
-
 import { useParams } from "react-router";
 
+import DanceIcon from "src/assets/dance.svg?react";
 import { useEventDetail, useLikeEvent } from "src/workflow/events";
-import { useCallback, useEffect, useState } from "react";
 
 import classes from "./detail.module.css";
 
-const GROUP_GAP = 6;
+const GROUP_GAP = 8;
 
 function EventDetailPage() {
   const { eventId } = useParams();
@@ -69,6 +76,7 @@ function EventDetailPage() {
 
   const onLikeClick = useCallback(() => {
     const likeCountKey = `likeCount_${eventId}`;
+    const isLikedKey = `isLiked_${eventId}`;
     const likeCount = parseInt(localStorage.getItem(likeCountKey) || "0");
 
     if (likeCount >= 2) {
@@ -80,15 +88,17 @@ function EventDetailPage() {
 
     setLiked((prev) => {
       isNextLike = !prev;
-      return !prev;
+      return isNextLike;
     });
 
-    if (!isNextLike) {
+    if (isNextLike) {
       localStorage.setItem(likeCountKey, (likeCount + 1).toString());
     }
+    localStorage.setItem(isLikedKey, isNextLike.toString());
+
     updateLike({
       eventId: eventId!,
-      liked: !isNextLike,
+      liked: isNextLike,
     });
     setLikesCount((prevLikesCount) => {
       if (isNextLike) {
@@ -104,9 +114,9 @@ function EventDetailPage() {
   }, []);
 
   useEffect(() => {
-    const likeCountKey = `likeCount_${eventId}`;
-    const likeCount = parseInt(localStorage.getItem(likeCountKey) || "0");
-    setLiked(likeCount > 0);
+    const isLikedKey = `isLiked_${eventId}`;
+    const isLiked = JSON.parse(localStorage.getItem(isLikedKey) || "{}");
+    setLiked(isLiked);
   }, [eventId]);
 
   useEffect(() => {
@@ -143,7 +153,7 @@ function EventDetailPage() {
     <Container
       size="lg"
       p="lg"
-      bg={"dark.8"}
+      bg={"black"}
       w={"100vw"}
       style={{ maxWidth: "100vw", overflowX: "hidden" }}
     >
@@ -216,10 +226,12 @@ function EventDetailPage() {
         {data?.eventName}
       </Title>
 
-      <Paper shadow="md" radius="lg" p="xs" mt="md" withBorder bg="#2D2C2C">
+      <Paper shadow="md" radius="lg" p="xs" mt="md" withBorder>
         <Group gap={GROUP_GAP} title="Event Date and Time">
           <MdCalendarToday size={20} />
-          <Text>{data?.eventDateAndTimeDisplay}</Text>
+          <Text size="sm" fw={"500"}>
+            {data?.eventDateAndTimeDisplay}
+          </Text>
         </Group>
         <Divider my="sm" />
         <Group gap={GROUP_GAP} align="center" title="Venue" wrap="nowrap">
@@ -229,6 +241,7 @@ function EventDetailPage() {
             target="_blank"
             rel="noopener noreferrer"
             underline="always"
+            fw={"500"}
           >
             {data?.venue?.fullAddressDisplay}
           </Anchor>
@@ -236,7 +249,7 @@ function EventDetailPage() {
       </Paper>
 
       {data?.attendeesCount ? (
-        <Paper shadow="md" radius="lg" p="4px" mt="md" withBorder bg="#2D2C2C">
+        <Paper shadow="md" radius="lg" p="4px" mt="md" withBorder>
           <Group gap={GROUP_GAP} align="center">
             <Avatar size={32} />
 
@@ -249,10 +262,10 @@ function EventDetailPage() {
       ) : null}
 
       <Box mt="lg">
-        <Title order={4} mb="sm">
+        <Title order={4} mb="sm" fw={"500"} c={"white"}>
           About
         </Title>
-        <Text c="gray" fz="sm" lineClamp={isTextEnlarged ? 0 : 3}>
+        <Text c="#D2D2D2" lineClamp={isTextEnlarged ? 0 : 3}>
           {data?.eventDescription}
         </Text>
         <Group>
@@ -261,15 +274,15 @@ function EventDetailPage() {
             variant="subtle"
             color="white"
             style={{
-              fontWeight: 500,
+              fontWeight: 400,
               textDecoration: "underline",
               textDecorationStyle: "dashed",
-              textUnderlineOffset: "4px",
+              textUnderlineOffset: "8px",
               textDecorationThickness: "1.5px",
             }}
             p={0}
             m={0}
-            size="xs"
+            size="md"
             onClick={() => setIsTextEnlarged((prev) => !prev)}
           >
             {isTextEnlarged ? "Read less" : "Read more"}
@@ -278,31 +291,65 @@ function EventDetailPage() {
         </Group>
 
         <Group gap={16} mt="md">
-          {data.eventFeatures.foodAvailable && (
-            <MdRestaurant title="Food Available" size={24} />
-          )}
-          {data.eventFeatures.smokingAllowed && (
-            <MdSmokingRooms title="Smoking Available" size={24} />
-          )}
-          {data.eventFeatures.wheelchairAccess && (
-            <MdAccessible title="WheelChair Available" size={24} />
-          )}
-          {data.eventFeatures.parkingAvailable && (
-            <MdLocalParking title="Parking Available" size={24} />
-          )}
-          {data.eventFeatures.supportAvailable && (
-            <MdHeadset title="Support Available" size={24} />
-          )}
+          <FeatureIcon
+            value={data.eventFeatures.foodAvailable}
+            label="Food Available"
+            icon={<MdRestaurant size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.smokingAllowed}
+            label="Smoking Allowed"
+            icon={<MdSmokingRooms size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.wheelchairAccess}
+            label="Wheelchair Access"
+            icon={<MdAccessible size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.parkingAvailable}
+            label="Parking Available"
+            icon={<MdLocalParking size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.supportAvailable}
+            label="Support Available"
+            icon={<MdHeadset size={24} />}
+          />
+
+          <FeatureIcon
+            value={data.eventFeatures.petFriendly}
+            label="Pet Friendly"
+            icon={<MdOutlinePets size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.alcoholServed}
+            label="Alcohol Served"
+            icon={<MdLiquor size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.ticketsAtVenue}
+            label="Tickets at Venue"
+            icon={<MdOutlineQrCode size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.danceFloorAvailable}
+            label="Dance Floor Available"
+            icon={<DanceIcon width={24} height={24} color="white" />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.washroomAvailable}
+            label="Washroom Available"
+            icon={<MdFamilyRestroom size={24} />}
+          />
+          <FeatureIcon
+            value={data.eventFeatures.poolAvailable}
+            label="Pool Available"
+            icon={<MdOutlinePool size={24} />}
+          />
         </Group>
 
-        <Paper
-          radius="lg"
-          mt={"md"}
-          p="6px"
-          // bg="dark.8"
-          bg="#2D2C2C"
-          maw={{ base: "100%", sm: 400 }}
-        >
+        <Paper radius="lg" mt={"md"} p="8px" maw={{ base: "100%", sm: 400 }}>
           <Flex
             direction="row"
             align="center"
@@ -310,6 +357,7 @@ function EventDetailPage() {
             gap={{ base: 0, sm: "sm" }}
           >
             <Group gap={2} align="center">
+              {/* // TODO: cleanup this div  */}
               <div
                 style={{
                   borderRadius: "60px",
@@ -331,12 +379,13 @@ function EventDetailPage() {
             </Group>
 
             <Button
-              size="xs"
+              size="sm"
               radius={"xl"}
               variant="white"
               component="a"
+              c={"dark.9"}
               href={data.ticketLink}
-              leftSection={<MdBookOnline size={16} />}
+              leftSection={<MdBookOnline size={16} fill="dark.9" />}
               target="_blank"
             >
               Get tickets
@@ -352,7 +401,7 @@ function EventDetailPage() {
             </Group>
           </Grid.Col>
           <Grid.Col span={{ base: 6, sm: 2 }}>
-            <Group gap={GROUP_GAP} maw={80} title="Event Duration">
+            <Group gap={GROUP_GAP} maw={100} title="Event Duration">
               <MdHourglassTop size={20} />
               <Text>{data?.eventDurationDisplay}</Text>
             </Group>
@@ -366,23 +415,35 @@ function EventDetailPage() {
         </Grid>
       </Box>
 
-      {/* <Paper shadow="md" radius="lg" p="xs" mt="md" withBorder bg="#2D2C2C"> */}
       <Accordion
         variant="contained"
         mt={"md"}
+        radius={"lg"}
         classNames={classes}
-        chevron={<MdArrowForwardIos size={32} />}
+        chevron={<MdArrowForwardIos size={20} />}
       >
-        <Accordion.Item value="event-policy">
+        <Accordion.Item value="event-policy" bg="#2D2C2C">
           <Accordion.Control icon={<TbInfoTriangle />}>
-            <Text fw={"bold"}>Venue Policy & Conditions</Text>
+            <Text size="sm" fw={"500"}>
+              Venue Policy & Conditions
+            </Text>
           </Accordion.Control>
-          <Accordion.Panel>{data.policyAndConditions}</Accordion.Panel>
+          <Accordion.Panel>
+            <List>
+              {data.policyAndConditions?.map((faq) => (
+                <List.Item key={faq}>
+                  <Text size="sm">{faq}</Text>
+                </List.Item>
+              ))}
+            </List>
+          </Accordion.Panel>
         </Accordion.Item>
         <Divider ml={"sm"} mr={"sm"} />
-        <Accordion.Item value="print">
-          <Accordion.Control icon={<MdOutlineQuestionMark />}>
-            <Text fw={"bold"}>Frequently Asked Questions</Text>
+        <Accordion.Item value="print" bg="#2D2C2C">
+          <Accordion.Control icon={<MdOutlineHelpOutline />}>
+            <Text size="sm" fw={"500"}>
+              Frequently Asked Questions
+            </Text>
           </Accordion.Control>
           <Accordion.Panel>
             {data.frequentlyAskedQuestions?.length === 0 ? (
@@ -391,19 +452,18 @@ function EventDetailPage() {
             {data.frequentlyAskedQuestions?.map((question) => (
               <div key={question.question} style={{ marginBottom: "10px" }}>
                 <Group gap={GROUP_GAP} mb={4}>
-                  <MdOutlineQuestionMark size={16} />
-                  <Text size="sm">{question.question}</Text>
+                  <Text size="sm" fw={"500"}>
+                    Q: {question.question}
+                  </Text>
                 </Group>
                 <Group gap={GROUP_GAP}>
-                  <MdComment size={14} />
-                  <Text size="sm">{question.answer}</Text>
+                  <Text size="sm">A: {question.answer}</Text>
                 </Group>
               </div>
             ))}
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
-      {/* </Paper> */}
 
       {data?.galleryImages.length > 0 && (
         <>
@@ -433,30 +493,33 @@ function EventDetailPage() {
         </>
       )}
 
-      {data.joinChatDetails?.isEnabled ? (
+      {data.joinChatDetails?.isEnabled && data.joinChatDetails?.joinChatLink ? (
         <Button
           variant="white"
           color="white"
           radius={"xl"}
-          pl={"xl"}
-          pr={"xl"}
-          leftSection={<MdComment fill="dark" />}
-          onClick={() => {
-            window.open(data.joinChatDetails?.chatLink);
-          }}
+          size="lg"
+          component="a"
+          target="_blank"
+          rel="noopener noreferrer"
+          href={data.joinChatDetails?.joinChatLink}
+          leftSection={<MdComment fill="dark" size={20} />}
+          bottom={{ base: 40, sm: 20 }}
           style={{
             position: "fixed",
-            bottom: 20,
             left: "50%",
             transform: "translateX(-50%)",
-            zIndex: 1000,
+            zIndex: 10,
           }}
+          miw={{ base: "200px" }}
         >
-          <Text c={"dark"}>Join Chat</Text>
+          <Text size="lg" fw={"500"} c={"dark"}>
+            Join Chat
+          </Text>
         </Button>
       ) : null}
 
-      <Space h="xl" />
+      <Space h="60px" />
 
       <Modal
         opened={showShareModal}
@@ -487,3 +550,47 @@ function EventDetailPage() {
 }
 
 export default EventDetailPage;
+
+const FeatureIcon = ({
+  value,
+  icon,
+  label,
+}: {
+  value?: boolean;
+  icon: ReactNode;
+  label: string;
+}) => {
+  const [isOpen, setIsOpened] = useState(false);
+
+  const intervalIdRef = useRef(0);
+
+  const onClick = useCallback(() => {
+    let isNextOpened = false;
+    setIsOpened((prev) => {
+      isNextOpened = !prev;
+      return isNextOpened;
+    });
+
+    if (isNextOpened) {
+      intervalIdRef.current = setInterval(() => {
+        setIsOpened(false);
+      }, 2500);
+    }
+
+    return () => clearInterval(intervalIdRef.current);
+  }, []);
+
+  return (
+    value && (
+      <Tooltip
+        label={label}
+        title={label}
+        opened={isOpen}
+        closeDelay={2000}
+        events={{ hover: false, focus: true, touch: true }}
+      >
+        <Center onClick={onClick}>{icon}</Center>
+      </Tooltip>
+    )
+  );
+};

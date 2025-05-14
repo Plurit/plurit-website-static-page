@@ -35,7 +35,7 @@ body {
   margin: 0;
   width: 100%;
   min-width: 320px;
-  background-color: var(--mantine-color-softBlueGradient-1);
+  background-color: var(--mantine-color-dark-9);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

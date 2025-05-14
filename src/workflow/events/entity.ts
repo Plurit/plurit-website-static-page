@@ -26,7 +26,7 @@ export class EventDetail {
   createTimestamp?: string;
   updateTimestamp?: string;
 
-  policyAndConditions?: string = "N/A";
+  policyAndConditions?: string[] = [];
   frequentlyAskedQuestions?: FAQ[] = [];
 
   private languageNames = new Intl.DisplayNames(["en"], {
@@ -81,7 +81,7 @@ export class EventFeatures {
 
 export class JoinChatDetails {
   isEnabled?: boolean;
-  chatLink?: string = "";
+  joinChatLink?: string = "";
 
   constructor(data: JoinChatDetails) {
     Object.assign(this, data);
